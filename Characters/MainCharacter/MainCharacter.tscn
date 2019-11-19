@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Characters/MainCharacter/MainCharacter.cs" type="Script" id=1]
-[ext_resource path="res://Characters/MainCharacter/fps_shooter_sprites.png" type="Texture" id=2]
-[ext_resource path="res://Characters/MainCharacter/crosshair.png" type="Texture" id=3]
+[ext_resource path="res://Objects/UI/UiGameOver.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Characters/MainCharacter/fps_shooter_sprites.png" type="Texture" id=3]
+[ext_resource path="res://Characters/MainCharacter/crosshair.png" type="Texture" id=4]
+[ext_resource path="res://Objects/UI/MessageLabel.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CapsuleShape" id=1]
 radius = 0.476518
@@ -34,9 +36,13 @@ shape = SubResource( 1 )
 [node name="Player" type="AnimationPlayer" parent="."]
 anims/shooting = SubResource( 2 )
 
+[node name="UIGameOver" parent="." instance=ExtResource( 2 )]
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="Control" type="Control" parent="CanvasLayer"]
+editor/display_folded = true
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -44,7 +50,7 @@ anchor_bottom = 1.0
 
 [node name="Sprite" type="Sprite" parent="CanvasLayer/Control"]
 position = Vector2( 208, -260 )
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 hframes = 4
 
 [node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
@@ -54,7 +60,13 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -16.0
 margin_top = -16.0
-texture = ExtResource( 3 )
+texture = ExtResource( 4 )
+
+[node name="Label" parent="CanvasLayer" instance=ExtResource( 5 )]
+margin_left = 349.767
+margin_top = 127.693
+margin_right = -353.233
+margin_bottom = -385.307
 
 [node name="RotationHelper" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.651881, 0 )

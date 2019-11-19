@@ -10,7 +10,7 @@ namespace Game.Level
     public class BaseLevel : Spatial
     {
 
-        protected List<SpawnSettings> roundsSettings;
+        protected SpawnSettings roundsSettings;
 
         protected MainCharacter mainCharacter;
 
@@ -23,6 +23,7 @@ namespace Game.Level
         public override void _Ready()
         {
             this.mainCharacter = GetNode<MainCharacter>("MainCharacter");
+            this.mainCharacter.Connect(nameof(MainCharacter.MainCharacterDie), this, "_on_MainCharacter_Death");
             this.InitializeSpawn();
             this.StartNextRound();
         }
@@ -43,12 +44,31 @@ namespace Game.Level
 
         public void StartNextRound()
         {
-            GD.Print(this.spawns.Count);
+            var settings = new SpawnSettings();
+            settings.NbrToSpawn = roundsSettings.NbrToSpawn * (this.currentRound + 1);
+            settings.Timeout = roundsSettings.Timeout - ((this.currentRound + 1) / 10.0f);
+            settings.Timeout = (settings.Timeout < 1) ? 1 : settings.Timeout;
             this.spawns.ForEach(x =>
             {
-                x.Settings = this.roundsSettings[this.currentRound];
+                x.Settings = new SpawnSettings();
+                x.Settings.NbrToSpawn = settings.NbrToSpawn;
+                x.Settings.Timeout = settings.Timeout;
                 x.Start();
             });
+
+            this.mainCharacter.labelMessage.AddMessage($"ROUND {currentRound+1} STARTING");
+
+            GD.Print("ROUND ", currentRound, " NBR SPAWN ", settings.NbrToSpawn, " TIMEOUT ", settings.Timeout);
+
+        }
+
+
+        private void _on_MainCharacter_Death(MainCharacter mainCharacter)
+        {
+            GD.Print("Main character dieee");
+            Input.SetMouseMode(Input.MouseMode.Visible);
+            this.mainCharacter.uiGameOver.ShowDialog(this.mainCharacter.Kills, this.currentRound);
+            this.mainCharacter.canvasLayer.QueueFree();
         }
 
         private void _on_SpawnOver(ZombieSpawn spawn)
@@ -65,6 +85,7 @@ namespace Game.Level
         private void _on_EnemieDeath(Enemie enemie)
         {
             this.nbrEnnemieAlive -= 1;
+            this.mainCharacter.Kills += 1;
             this.isRoundOver();
         }
 
@@ -72,7 +93,8 @@ namespace Game.Level
         {
             if (this.spawns.All(x => x.isOver) && this.nbrEnnemieAlive == 0)
             {
-                GD.Print("Game over");
+                this.currentRound += 1;
+                this.StartNextRound();
                 return true;
             }
             return false;

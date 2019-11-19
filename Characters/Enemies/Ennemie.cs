@@ -19,14 +19,19 @@ namespace Game.Characters.Ennemies
             this.character = ch;
         }
 
+        public override void Kill() {
+            this.collisionShape.Disabled = true;
+            base.Kill();
+        }
+
         public override void _Ready() {
-            GD.Print("Instancing ennemie");
             this.DeathSignal = nameof(EnemieDeath);
+            this.collisionShape = GetNode<CollisionShape>("CollisionShape");
             this.animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             this.rayCast = GetNode<RayCast>("RayCast");
             this.animationPlayer.Play("walking");
             this.character =  GetTree().GetRoot().GetNode<MainCharacter>("Spatial/MainCharacter");
-            AddToGroup("ennemies");
+            //AddToGroup("ennemies");
         }
 
         public override void _PhysicsProcess(float delta) {
@@ -43,10 +48,9 @@ namespace Game.Characters.Ennemies
             if(rayCast.IsColliding()) {
                 var coll = rayCast.GetCollider();
                 if(coll != null && coll is MainCharacter) {
-                    GD.Print("CHARACTER");
+                    (coll as MainCharacter).Hit(25.0f);
                 }
             }
-
         }
     }
 }

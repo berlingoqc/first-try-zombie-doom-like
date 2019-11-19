@@ -4,8 +4,12 @@ namespace Game.Characters
 {
     public class MainCharacter : Character
     {
-        public float MouseSensitivity = 0.05f;
- 
+
+        [Signal]
+        public delegate void MainCharacterDie(MainCharacter main);
+
+        private float MouseSensitivity = 0.05f;
+
         private static float BaseMouvementSpeed = 4;
         private static float BaseMouseSpeed = 0.5f;
 
@@ -18,15 +22,54 @@ namespace Game.Characters
         private RayCast rayCast;
         private SpotLight spotLight;
 
+        private MessageLabel labelMainMessage;
+
+
+        private int _kills = 0;
+
+
+        public UiGameOver uiGameOver;
+        public CanvasLayer canvasLayer;
+
+
+
+        public int Kills
+        {
+            get
+            {
+                return _kills;
+            }
+            set
+            {
+                _kills = value;
+            }
+        }
+
+
+        public MessageLabel labelMessage
+        {
+            get
+            {
+                return this.labelMainMessage;
+            }
+        }
 
         public override void _Ready()
         {
+
+            Health = 100;
+            DeathSignal = nameof(MainCharacterDie);
+
             Input.SetMouseMode(Input.MouseMode.Captured);
             this.animationPlayer = GetNode<AnimationPlayer>("Player");
+            this.collisionShape = GetNode<CollisionShape>("CollisionShape");
+            this.uiGameOver = GetNode<UiGameOver>("UIGameOver");
+            this.canvasLayer = GetNode<CanvasLayer>("CanvasLayer");
             this.rayCast = GetNode<RayCast>("RotationHelper/RayCast");
             this.camera = GetNode<Camera>("RotationHelper/Camera");
             this.rotationHelper = GetNode<Spatial>("RotationHelper");
             this.spotLight = GetNode<SpotLight>("RotationHelper/SpotLight");
+            this.labelMainMessage = GetNode<MessageLabel>("CanvasLayer/Label");
         }
 
         public override void _Input(InputEvent @event)
@@ -34,7 +77,7 @@ namespace Game.Characters
             if (@event is InputEventMouseMotion && Input.GetMouseMode() == Input.MouseMode.Captured)
             {
                 InputEventMouseMotion mouseEvent = @event as InputEventMouseMotion;
-                rotationHelper.RotateX(Mathf.Deg2Rad(-1.0f*mouseEvent.Relative.y * MouseSensitivity));
+                rotationHelper.RotateX(Mathf.Deg2Rad(-1.0f * mouseEvent.Relative.y * MouseSensitivity));
                 RotateY(Mathf.Deg2Rad(-mouseEvent.Relative.x * MouseSensitivity));
 
                 Vector3 cameraRot = rotationHelper.RotationDegrees;
@@ -59,6 +102,8 @@ namespace Game.Characters
 
         private void ProcessMovement(float delta)
         {
+            if (isDead)
+                return;
             direction.y = 0;
             direction = direction.Normalized();
 
@@ -71,15 +116,15 @@ namespace Game.Characters
             target *= BaseMouvementSpeed;
 
             float accel;
-            if(direction.Dot(hvel) > 0)
+            if (direction.Dot(hvel) > 0)
                 accel = Accel;
             else
                 accel = Deaccel;
 
-            hvel = hvel.LinearInterpolate(target,Accel*delta);
+            hvel = hvel.LinearInterpolate(target, Accel * delta);
             velocity.x = hvel.x;
             velocity.z = hvel.z;
-            velocity = MoveAndSlide(velocity,new Vector3(0,1,0),false,4,Mathf.Deg2Rad(MaxSlopeAngle));
+            velocity = MoveAndSlide(velocity, new Vector3(0, 1, 0), false, 4, Mathf.Deg2Rad(MaxSlopeAngle));
 
             if (Input.IsActionPressed("shoot") && !this.animationPlayer.IsPlaying())
             {
@@ -87,7 +132,6 @@ namespace Game.Characters
                 var collider = this.rayCast.GetCollider();
                 if (collider != null)
                 {
-                    GD.Print(collider.GetType().FullName);
                     if (this.rayCast.IsColliding() && collider is Ennemies.Enemie)
                     {
                         var ennemies = (Ennemies.Enemie)collider;
@@ -100,6 +144,8 @@ namespace Game.Characters
 
         private void ProcessInput(float delta)
         {
+            if (isDead)
+                return;
             direction = new Vector3();
             var vec2 = new Vector2();
             Transform camXForm = this.camera.GetGlobalTransform();
@@ -130,11 +176,12 @@ namespace Game.Characters
 
             if (IsOnFloor() && Input.IsActionJustPressed("jumping"))
                 velocity.y = JumpSpeed;
-            
+
             isRunning = Input.IsActionJustPressed("sprinting");
 
-            if(Input.IsActionJustPressed("toggle_flashlight")) {
-                if(this.spotLight.IsVisibleInTree())
+            if (Input.IsActionJustPressed("toggle_flashlight"))
+            {
+                if (this.spotLight.IsVisibleInTree())
                     this.spotLight.Hide();
                 else
                     this.spotLight.Show();

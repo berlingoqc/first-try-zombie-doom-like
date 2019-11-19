@@ -59,7 +59,6 @@ namespace Game.Objects.Spawn
                 privateZombie.SetCharacter(this.mainCharacter);
                 AddChild(privateZombie);
                 privateZombie.SetCharacter(this.mainCharacter);
-                GD.Print("Creating character");
                 EmitSignal(nameof(EnemieSpawn),privateZombie);
 
                 this.Settings.NbrToSpawn -= 1;

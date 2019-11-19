@@ -34,6 +34,7 @@ namespace Game.Characters
 
 
         protected AnimationPlayer animationPlayer;
+        protected CollisionShape collisionShape;
 
         public bool isDead
         {
@@ -43,12 +44,12 @@ namespace Game.Characters
             }
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             this.Health = 0;
             this.animationPlayer.Stop();
             this.animationPlayer.Play(DeathAnimation);
-            this.animationPlayer.Connect("animation_finished", this, "QueueFree");
+            this.animationPlayer.Connect("animation_finished", this, "_on_Death_Animation_Over");
             EmitSignal(this.DeathSignal, this);
         }
 
@@ -64,6 +65,10 @@ namespace Game.Characters
 			this.animationPlayer.Stop();
 			this.animationPlayer.Connect("animation_finished",this,"OnHitOver");
             this.animationPlayer.Play(HitAnimation);
+        }
+
+        public void _on_Death_Animation_Over(string name) {
+            this.QueueFree();
         }
 
         public void OnHitOver(string name) {

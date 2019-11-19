@@ -60,6 +60,8 @@
     <Compile Include="Level\BaseLevel.cs" />
     <Compile Include="Objects\Spawn\SpawnSettings.cs" />
     <Compile Include="Objects\Spawn\ZombieSpawn.cs" />
+    <Compile Include="Objects\UI\MessageLabel.cs" />
+    <Compile Include="Objects\UI\UiGameOver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
