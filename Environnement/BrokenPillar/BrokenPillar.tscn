@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Environnement/BrokenPillar/broken_pillar.escn" type="PackedScene" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 1.46246
+height = 2.74625
+
+[node name="BrokenPillar" type="Spatial"]
+
+[node name="Spatial" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Spatial"]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.106734, 2.07348, 0 )
+shape = SubResource( 1 )
+
+[node name="Scene Root" parent="Spatial" instance=ExtResource( 1 )]

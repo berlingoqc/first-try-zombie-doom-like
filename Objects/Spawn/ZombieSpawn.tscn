@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Objects/Spawn/ZombieSpawn.cs" type="Script" id=1]
+
+
+[node name="ZombieSpawn" type="Spatial"]
+script = ExtResource( 1 )
