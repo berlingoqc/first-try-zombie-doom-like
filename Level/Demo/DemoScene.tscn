@@ -27,7 +27,7 @@ shape = SubResource( 1 )
 transform = Transform( 5.31, 0, 0, 0, 0.25, 0, 0, 0, 5.41, -0.757753, 0, 0 )
 
 [node name="BrokenPillar" parent="." instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.400643, 0.00289205, -17.5114 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.400643, -0.0288222, -17.5114 )
 
 [node name="ZombieSpawn" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.65298, 0.254915, -7.64087 )
