@@ -58,10 +58,12 @@
     <Compile Include="Characters\MainCharacter\MainCharacter.cs" />
     <Compile Include="Level\Demo\DemoScene.cs" />
     <Compile Include="Level\BaseLevel.cs" />
+    <Compile Include="Objects\Spawn\SpawnManager.cs" />
     <Compile Include="Objects\Spawn\SpawnSettings.cs" />
     <Compile Include="Objects\Spawn\ZombieSpawn.cs" />
     <Compile Include="Objects\UI\MessageLabel.cs" />
     <Compile Include="Objects\UI\UiGameOver.cs" />
+    <Compile Include="Objects\Windows\BaseWindows.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

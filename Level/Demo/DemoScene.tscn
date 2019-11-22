@@ -1,36 +1,38 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Level/Demo/DemoScene.cs" type="Script" id=1]
 [ext_resource path="res://Characters/MainCharacter/MainCharacter.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Level/Demo/map_one.escn" type="PackedScene" id=3]
-[ext_resource path="res://Environnement/BrokenPillar/BrokenPillar.tscn" type="PackedScene" id=4]
-[ext_resource path="res://Objects/Spawn/ZombieSpawn.tscn" type="PackedScene" id=5]
-
-[sub_resource type="BoxShape" id=1]
-extents = Vector3( 31.8482, 0.0486272, 32.554 )
+[ext_resource path="res://Objects/Spawn/ZombieSpawn.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Level/Demo/MapZombieFixe.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Objects/Windows/BaseWindows.tscn" type="PackedScene" id=5]
 
 [node name="Spatial" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00650597, -4.76837e-07, 0.00802705 )
 script = ExtResource( 1 )
 
 [node name="MainCharacter" parent="." instance=ExtResource( 2 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.941164, 0 )
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0.199315, 0.30944, 1.36765 )
 
-[node name="Ground" type="StaticBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.716007, 0, -4.33891 )
+[node name="ZombieSpawn" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.956468, 0.198581, 12.4818 )
 
-[node name="CollisionShape" type="CollisionShape" parent="Ground"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.297635, -0.00839806, -0.0240622 )
-shape = SubResource( 1 )
+[node name="ZombieSpawn3" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.0136, 0.198581, 12.4818 )
 
-[node name="Scene Root" parent="Ground" instance=ExtResource( 3 )]
-transform = Transform( 5.31, 0, 0, 0, 0.25, 0, 0, 0, 5.41, -0.757753, 0, 0 )
+[node name="ZombieSpawn4" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 22.0136, 0.198581, -19.9818 )
 
-[node name="BrokenPillar" parent="." instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.400643, -0.0288222, -17.5114 )
+[node name="ZombieSpawn5" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5047, 0.198581, -19.9818 )
 
-[node name="ZombieSpawn" parent="." instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.65298, 0.254915, -7.64087 )
+[node name="ZombieSpawn6" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -6.43853, 0.198581, -7.62303 )
 
-[node name="ZombieSpawn2" parent="." instance=ExtResource( 5 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.29151, 1.00057, -8.57778 )
+[node name="ZombieSpawn2" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25.1407, 0.0856495, -2.0245 )
+
+[node name="Scene Root" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 1.85797, -0.244091, 0.739635 )
+
+[node name="Windows1" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.548635, 3.74251, -0.244091, 8.093 )

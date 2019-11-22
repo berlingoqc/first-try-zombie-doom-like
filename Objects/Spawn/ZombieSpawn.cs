@@ -57,6 +57,7 @@ namespace Game.Objects.Spawn
             {
                 PrivateZombie privateZombie = (PrivateZombie)scene.Instance();
                 privateZombie.SetCharacter(this.mainCharacter);
+                privateZombie.SetScale(new Vector3(0.5f,0.5f,0.5f));
                 AddChild(privateZombie);
                 privateZombie.SetCharacter(this.mainCharacter);
                 EmitSignal(nameof(EnemieSpawn),privateZombie);
