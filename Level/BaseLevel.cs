@@ -2,6 +2,8 @@ using Godot;
 using Game.Characters;
 using Game.Characters.Ennemies;
 using Game.Objects.Spawn;
+using Game.Objects.Navmesh;
+using Game.Objects.Windows;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -16,6 +18,12 @@ namespace Game.Level
 
         protected List<ZombieSpawn> spawns;
 
+        protected List<BaseWindows> windows;
+
+        protected BaseLevelNavMesh navMesh;
+
+        protected SpawnManager spawnManager;
+
         private int nbrEnnemieAlive = 0;
 
         private int currentRound = 0;
@@ -24,44 +32,45 @@ namespace Game.Level
         {
             this.mainCharacter = GetNode<MainCharacter>("MainCharacter");
             this.mainCharacter.Connect(nameof(MainCharacter.MainCharacterDie), this, "_on_MainCharacter_Death");
+
+            this.InitiazeWindows();
+            this.InitializeNavMesh();
             this.InitializeSpawn();
-            this.StartNextRound();
+            this.spawnManager.StartRound();
         }
 
         public void InitializeSpawn()
         {
+            this.spawnManager = GetNode<SpawnManager>("SpawnManager");
             this.spawns = GetChildren().Where(x => x is ZombieSpawn).Select(x =>
             {
-                GD.Print("Got spawnn");
                 var spawn = x as ZombieSpawn;
-                spawn.SetMainCharacter(this.mainCharacter);
-                spawn.Connect("SpawningOver", this, "_on_SpawnOver");
-                spawn.Connect("EnemieSpawn", this, "_on_EnemieSpawn");
                 return spawn;
+            }).ToList();
+
+
+            this.spawnManager.AvailableSpawn = this.spawns;
+            this.spawnManager.Settings = this.roundsSettings;
+            this.spawnManager.MainCharacter = this.mainCharacter;
+            this.spawnManager.navMesh = this.navMesh;
+        }
+
+        private void InitiazeWindows()
+        {
+            this.windows = GetChildren().Where(x => x is BaseWindows).Select(x =>
+            {
+                var window = x as BaseWindows;
+                return window;
             }).ToList();
         }
 
-
-        public void StartNextRound()
+        private void InitializeNavMesh()
         {
-            var settings = new SpawnSettings();
-            settings.NbrToSpawn = roundsSettings.NbrToSpawn * (this.currentRound + 1);
-            settings.Timeout = roundsSettings.Timeout - ((this.currentRound + 1) / 10.0f);
-            settings.Timeout = (settings.Timeout < 1) ? 1 : settings.Timeout;
-            this.spawns.ForEach(x =>
-            {
-                x.Settings = new SpawnSettings();
-                x.Settings.NbrToSpawn = settings.NbrToSpawn;
-                x.Settings.Timeout = settings.Timeout;
-                x.Start();
-            });
-
-            this.mainCharacter.labelMessage.AddMessage($"ROUND {currentRound+1} STARTING");
-
-            GD.Print("ROUND ", currentRound, " NBR SPAWN ", settings.NbrToSpawn, " TIMEOUT ", settings.Timeout);
-
+            this.navMesh = GetNode<BaseLevelNavMesh>("Level");
+            this.navMesh.draw = GetNode<ImmediateGeometry>("Draw");
+            this.navMesh.mainCharacter = mainCharacter;
+            this.navMesh.windows = windows;
         }
-
 
         private void _on_MainCharacter_Death(MainCharacter mainCharacter)
         {
@@ -91,12 +100,13 @@ namespace Game.Level
 
         private bool isRoundOver()
         {
-            if (this.spawns.All(x => x.isOver) && this.nbrEnnemieAlive == 0)
+            /*if (this.spawns.All(x => x.isOver) && this.nbrEnnemieAlive == 0)
             {
                 this.currentRound += 1;
                 this.StartNextRound();
                 return true;
             }
+            */
             return false;
         }
     }
