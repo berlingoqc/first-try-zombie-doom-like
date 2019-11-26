@@ -17,7 +17,7 @@ script = ExtResource( 1 )
 transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 9.40924, 0.30944, -3.51657 )
 
 [node name="ZombieSpawn" parent="." instance=ExtResource( 4 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.989736, 0.198581, 12.4974 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 6.19011, 0.198581, 18.1028 )
 
 [node name="ZombieSpawn3" parent="." instance=ExtResource( 4 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.9755, 0.198581, 4.14148 )
@@ -38,11 +38,11 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 25.1407, 0.0856495, -2.0245 )
 transform = Transform( 0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 1.85797, -0.244091, 0.739635 )
 
 [node name="Windows1" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.548635, 4.78567, 0.963812, 7.53736 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.892495, 4.76679, 0.963812, 8.16419 )
 ID = 1
 
 [node name="Windows2" parent="." instance=ExtResource( 6 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 0.548635, 13.2978, 0.677432, -1.3257 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1.34808, 13.3139, 0.920202, -1.0682 )
 ID = 2
 
 [node name="Draw" type="ImmediateGeometry" parent="."]

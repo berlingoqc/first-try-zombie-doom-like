@@ -10,7 +10,7 @@ namespace Game.Level.Demo
     {
       public DemoScene() {
         roundsSettings = new SpawnSettings();
-        roundsSettings.NbrToSpawn = 2;
+        roundsSettings.NbrToSpawn = 1;
         roundsSettings.Timeout = 5.0f;
       }
     }

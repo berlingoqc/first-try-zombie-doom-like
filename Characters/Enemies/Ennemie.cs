@@ -13,7 +13,7 @@ namespace Game.Characters.Ennemies
 
         private RayCast rayCast;
 
-        private MainCharacter character;
+        private Spatial target;
 
         private List<Vector3> path;
 
@@ -24,9 +24,9 @@ namespace Game.Characters.Ennemies
         {
             this.path = path;
         }
-        public void SetCharacter(MainCharacter ch)
+        public void SetTarget(Spatial ch)
         {
-            this.character = ch;
+            this.target = ch;
         }
 
         public override void Kill()
@@ -42,31 +42,60 @@ namespace Game.Characters.Ennemies
             this.animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
             this.rayCast = GetNode<RayCast>("RayCast");
             this.animationPlayer.Play("walking");
-            this.character = GetTree().GetRoot().GetNode<MainCharacter>("Spatial/MainCharacter");
             //AddToGroup("ennemies");
         }
 
         public override void _PhysicsProcess(float delta)
         {
-            if (isDead || this.character == null)
+            if (isDead || this.target == null)
                 return;
 
+            var vecToPlayer = this.target.Translation - this.GlobalTransform.origin;
+            vecToPlayer.y = 0;
+            vecToPlayer = vecToPlayer.Normalized();
+            rayCast.CastTo = vecToPlayer * 1.5f;
 
-            //var vecToPlayer = this.character.Translation - this.GlobalTransform.origin;
-            //vecToPlayer.y = 0;
-            //vecToPlayer = vecToPlayer.Normalized();
-            //rayCast.CastTo = vecToPlayer * 1.5f;
-            if (this.path != null && this.path.Count > 0)
+            MoveAndCollide(vecToPlayer * BaseMouvementSpeed * delta);
+
+            /*if (this.path != null && this.path.Count > 0)
             {
+                foreach(var p in this.path) {
+                    GD.Print("PATH ",p.ToString());
+                }
                 var toWalk = delta * 4.0;
                 var toWatch = new Vector3(0,1,0);
                 while(toWalk > 0 && path.Count >= 2) {
                     var pFrom = path[path.Count - 1];
+                    var pto = path[path.Count - 2];
+                    toWatch = (pto - pFrom).Normalized();
+                    var d = pFrom.DistanceTo(pto);
+                    if(d <= toWalk) {
+                        path.RemoveAt(path.Count -1);
+                        toWalk -= d;
+                    } else {
+                        path[path.Count-1] = pFrom.LinearInterpolate(pto,(float)((double)toWalk / d));
+                        toWalk = 0;
+                    }
                 }
 
-                MoveAndCollide(this.path[0].Normalized() * BaseMouvementSpeed * delta);
-            }
+                var atPos = path[path.Count - 1];
+                var atDir = toWatch;
+                atDir.y = 0;
 
+                var t = new Transform();
+
+                t.origin = atPos;
+                t = t.LookingAt(atPos + atDir,new Vector3(0,1,0));
+                this.SetTransform(t);
+
+                if(path.Count < 2) {
+                    path = new List<Vector3>();
+                }
+
+                //MoveAndCollide(this.path[0].Normalized() * BaseMouvementSpeed * delta);
+            }
+            */
+            
 
             if (rayCast.IsColliding())
             {

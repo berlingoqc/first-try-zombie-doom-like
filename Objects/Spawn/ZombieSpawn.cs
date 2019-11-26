@@ -11,10 +11,13 @@ namespace Game.Objects.Spawn
     public class ZombieSpawn : Spatial
     {
         private PackedScene scene;
+
+        private Spatial world;
        
         public override void _Ready()
         {
             scene = ResourceLoader.Load("res://Characters/Enemies/PrivateZombie/PrivateZombie.tscn") as PackedScene;
+            this.world = GetTree().GetRoot().GetNode<Spatial>("Spatial");
         }
 
         public void Spawn(MainCharacter mainCharacter, BaseLevelNavMesh navigation)
@@ -22,13 +25,12 @@ namespace Game.Objects.Spawn
             if (scene.CanInstance())
             {
                 PrivateZombie privateZombie = (PrivateZombie)scene.Instance();
-                privateZombie.SetCharacter(mainCharacter);
+                privateZombie.SetTranslation(this.Translation);
                 privateZombie.SetScale(new Vector3(0.5f,0.5f,0.5f));
-                AddChild(privateZombie);
+                this.world.AddChild(privateZombie);
 
                 var (_,d,w) = navigation.GetPathClosestWindows(privateZombie);
-                GD.Print("Going to ",w.ID);
-                privateZombie.SetPath(new List<Vector3>(d));
+                privateZombie.SetTarget(w);
             }
         }
 

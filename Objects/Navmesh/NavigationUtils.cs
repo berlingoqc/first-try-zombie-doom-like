@@ -7,7 +7,7 @@ namespace Game.Objects.Navmesh
 
         public static (float, Vector3[]) GetSimplePathAndDistance(this Navigation navigation, Spatial item, Spatial destination)
         {
-            var itemTranslation = item.GetTranslation();
+            /*var itemTranslation = item.GetTranslation();
             var paths = navigation.GetSimplePath(itemTranslation, destination.GetTranslation());
             float distance = 0;
             Vector3 lastPoint = itemTranslation;
@@ -17,7 +17,8 @@ namespace Game.Objects.Navmesh
                 lastPoint = p;
             }
             GD.Print("DISTANCE ", distance);
-            return (distance, paths);
+            */
+            return (item.Translation.DistanceTo(destination.Translation), null);
         }
     }
 
